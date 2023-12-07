@@ -17,7 +17,7 @@
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
                BuildableName = "statusmaker.app"
                BlueprintName = "statusmaker"
-               ReferencedContainer = "container:statusmaker.xcodeproj">
+               ReferencedContainer = "container:BorderMe.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
                BuildableName = "statusmakerTests.xctest"
                BlueprintName = "statusmakerTests"
-               ReferencedContainer = "container:statusmaker.xcodeproj">
+               ReferencedContainer = "container:BorderMe.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,7 +57,7 @@
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "statusmaker.app"
             BlueprintName = "statusmaker"
-            ReferencedContainer = "container:statusmaker.xcodeproj">
+            ReferencedContainer = "container:BorderMe.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -74,7 +74,7 @@
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
             BuildableName = "statusmaker.app"
             BlueprintName = "statusmaker"
-            ReferencedContainer = "container:statusmaker.xcodeproj">
+            ReferencedContainer = "container:BorderMe.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
