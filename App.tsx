@@ -34,15 +34,6 @@ const tmp = 'https://i.pinimg.com/originals/05/e2/18/05e2182f79b9001a76644ea7b72
 
 const window = Dimensions.get('screen')
 
-const paddings = [
-  0.95,
-  0.9,
-  0.85,
-  0.8,
-  0.75,
-  0.7,
-]
-
 const chooseBGSize = 70
 
 const App = () => {
@@ -53,6 +44,9 @@ const App = () => {
   const [bgUri, setBgUri] = useState(bgSources[0])
   const [percentPadding, setPercentPadding] = useState(0.9)
   const [ratio, setRatio] = useState(3 / 2)
+  const [borderRadius, setBorderRadius] = useState(10)
+  const [borderWidth, setBorderWidth] = useState(0)
+  const [borderColor, setBorderColor] = useState('black')
 
   const isLandscape = imageRealSize[0] >= imageRealSize[1]
   const maxRatio = Math.max(imageRealSize[0], imageRealSize[1]) / Math.min(imageRealSize[0], imageRealSize[1])
@@ -85,8 +79,6 @@ const App = () => {
     imageNowSize = [h * imageRealSize[0] / imageRealSize[1], h]
   }
 
-  // console.log(ratio, maxRatio, containerSize, imageNowSize);
-
   const onLoadedImage = (e: NativeSyntheticEvent<ImageLoadEventData>) => {
     Image.getSize(imgUri, (w, h) => {
       setImageRealSize([w, h])
@@ -99,10 +91,7 @@ const App = () => {
   }
 
   const onValueChange_Ratio = (value: number) => {
-    console.log(value);
-
     setRatio(value)
-
   }
   const onPressSave = () => {
     // @ts-ignore
@@ -126,7 +115,8 @@ const App = () => {
         // width: 100,
         // height: 300,
         freeStyleCropEnabled: true,
-        cropping: true
+        cropping: true,
+        compressImageQuality: 1,
       })
 
       console.log(img.path);
@@ -147,8 +137,8 @@ const App = () => {
         {/* @ts-ignore */}
         <ViewShot ref={ref} options={{ fileName: "Your-File-Name", format: "jpg", quality: 1 }}>
           <ImageBackground resizeMode='cover' source={{ uri: bgUri }} style={{ alignSelf: 'center', justifyContent: 'center', alignItems: 'center', width: containerSize[0], height: containerSize[1] }}>
-            <View style={{ backgroundColor: 'yellow', justifyContent: 'center', alignItems: 'center', width: imageNowSize[0], height: imageNowSize[1], borderRadius: 10, overflow: 'hidden' }}>
-              <Image onLoad={onLoadedImage} resizeMode='contain' source={{ uri: imgUri }} style={{ backgroundColor: 'red', width: '100%', height: '100%' }} />
+            <View style={{ borderWidth, borderColor, justifyContent: 'center', alignItems: 'center', width: imageNowSize[0], height: imageNowSize[1], borderRadius: borderRadius, overflow: 'hidden' }}>
+              <Image onLoad={onLoadedImage} resizeMode='cover' source={{ uri: imgUri }} style={{ width: '100%', height: '100%' }} />
             </View>
           </ImageBackground>
         </ViewShot>
@@ -167,7 +157,7 @@ const App = () => {
         <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
 
         <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 20, }}>Padding</Text>
+          <Text style={{ color: 'black', fontSize: 20, }}>Scale</Text>
 
           <Slider
             style={{ flex: 1, }}
@@ -198,18 +188,50 @@ const App = () => {
           />
         </View>
 
-        {/* <View>
-          <ScrollView horizontal contentContainerStyle={{ gap: 10, height: 50 }}>
-            {
-              borders.map((border, index) => {
-                return <TouchableOpacity style={{ padding: 5 }} key={'border' + index} onPress={() => setPercentPadding(border)}>
-                  <Text style={{ fontSize: 20, }}>{border}</Text>
-                </TouchableOpacity>
-              })
-            }
-          </ScrollView>
-        </View> */}
+        <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
 
+        <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
+          <Text style={{ color: 'black', fontSize: 20, }}>Corner</Text>
+
+          <Slider
+            style={{ flex: 1, }}
+            minimumValue={0}
+            maximumValue={50}
+            tapToSeek={true}
+            value={borderRadius}
+            onValueChange={(value: number) => setBorderRadius(value)}
+            minimumTrackTintColor='gray'
+            maximumTrackTintColor="#000000"
+          />
+        </View>
+
+        <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
+
+        <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
+          <Text style={{ color: 'black', fontSize: 20, }}>Border</Text>
+
+          <Slider
+            style={{ flex: 1, }}
+            minimumValue={0}
+            maximumValue={5}
+            tapToSeek={true}
+            value={borderWidth}
+            onValueChange={(value: number) => setBorderWidth(value)}
+            minimumTrackTintColor='gray'
+            maximumTrackTintColor="#000000"
+          />
+        </View>
+
+        <ScrollView horizontal contentContainerStyle={{ gap: 10 }}>
+          {
+            ['red', 'yellow', 'black'].map((color, index) => {
+              return <TouchableOpacity
+                onPress={() => setBorderColor(color)}
+                key={color} 
+                style={{ width: 20, height: 20, backgroundColor: color }} />
+            })
+          }
+        </ScrollView>
       </ScrollView>
       <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'center', paddingBottom: 10 }}>
         <TouchableOpacity style={{ borderRadius: 5, padding: 10, backgroundColor: 'black' }} onPress={onPressSave}>
