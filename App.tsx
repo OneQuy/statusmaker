@@ -1,12 +1,13 @@
 import { View, Text, SafeAreaView, ImageBackground, Image, NativeSyntheticEvent, ImageLoadEventData, Dimensions, TouchableOpacity, Alert, ScrollView, FlatList, StyleSheet } from 'react-native'
-import React, { LegacyRef, MutableRefObject, useRef, useState } from 'react'
+import React, { LegacyRef, MutableRefObject, useEffect, useRef, useState } from 'react'
 import ViewShot from "react-native-view-shot";
 // import { Asset, CameraOptions, launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { SaveToGalleryAsync } from './src/common/CameraRoll';
 import Slider from '@react-native-community/slider';
 import ImagePicker from 'react-native-image-crop-picker';
+import { colorNameToHexDefines } from './src/common/UtilsTS';
 
-const bgSources = [
+const bgSourcesDefault = [
   'https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?size=626&ext=jpg&ga=GA1.1.1222169770.1701734400&semt=sph',
   'https://img.freepik.com/free-vector/colorful-watercolor-rainbow-background_125540-151.jpg?w=2000',
   'https://img.freepik.com/free-vector/background-watercolor-texture_122380-11.jpg',
@@ -26,27 +27,28 @@ const bgSources = [
   'https://img.freepik.com/premium-photo/abstract-background-images-wallpaper-ai-generated_643360-130229.jpg',
   'https://img.freepik.com/premium-photo/abstract-background-images-wallpaper-ai-generated_643360-52276.jpg',
   'https://images.unsplash.com/photo-1530293959042-0aac487c21e3?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Ymx1ZSUyMGFuZCUyMHdoaXRlfGVufDB8fDB8fHww',
-
-
 ]
 
-const tmp = 'https://i.pinimg.com/originals/05/e2/18/05e2182f79b9001a76644ea7b72a26ec.jpg'
+const listBGFirebaseLink = 'https://firebasestorage.googleapis.com/v0/b/onequy-borderme.appspot.com/o/listBG.txt?alt=media&token=c8611c3d-1a59-4835-a621-612726bfb336'
 
 const window = Dimensions.get('screen')
 
 const chooseBGSize = 70
 
+const colors = Object.values(colorNameToHexDefines)
+
 const App = () => {
   const ref = useRef<LegacyRef<ViewShot> | undefined>();
 
   const [imageRealSize, setImageRealSize] = useState<[number, number]>([10, 10])
-  const [imgUri, setImageUri] = useState(tmp)
-  const [bgUri, setBgUri] = useState(bgSources[0])
+  const [imgUri, setImageUri] = useState(bgSourcesDefault[1])
+  const [bgUri, setBgUri] = useState(bgSourcesDefault[0])
   const [percentPadding, setPercentPadding] = useState(0.9)
   const [ratio, setRatio] = useState(3 / 2)
   const [borderRadius, setBorderRadius] = useState(10)
   const [borderWidth, setBorderWidth] = useState(0)
   const [borderColor, setBorderColor] = useState('black')
+  const [listBGArr, setListBGArr] = useState<string[]>(bgSourcesDefault)
 
   const isLandscape = imageRealSize[0] >= imageRealSize[1]
   const maxRatio = Math.max(imageRealSize[0], imageRealSize[1]) / Math.min(imageRealSize[0], imageRealSize[1])
@@ -130,6 +132,22 @@ const App = () => {
     }
   }
 
+  useEffect(() => {
+    const downloadListBGAsync = async () => {
+      try {
+        const res = await fetch(listBGFirebaseLink)
+        const text = await res.text()
+
+        setListBGArr(text.split('\n'))
+      }
+      catch (e) {
+        console.error(e);
+      }
+    }
+
+    downloadListBGAsync()
+  }, [])
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -145,7 +163,7 @@ const App = () => {
         <View style={{ height: chooseBGSize, width: '100%' }}>
           <ScrollView horizontal contentContainerStyle={{}}>
             {
-              bgSources.map((uri, index) => {
+              listBGArr.map((uri, index) => {
                 return <TouchableOpacity style={{ width: chooseBGSize, height: chooseBGSize }} key={index} onPress={() => setBgUri(uri)}>
                   <Image source={{ uri }} style={{ width: '100%', height: '100%' }} />
                 </TouchableOpacity>
@@ -222,12 +240,12 @@ const App = () => {
           />
         </View>
 
-        <ScrollView horizontal contentContainerStyle={{ gap: 10 }}>
+        <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: 10 }}>
           {
-            ['red', 'yellow', 'black'].map((color, index) => {
+            colors.map((color, index) => {
               return <TouchableOpacity
                 onPress={() => setBorderColor(color)}
-                key={color} 
+                key={color + index}
                 style={{ width: 20, height: 20, backgroundColor: color }} />
             })
           }
