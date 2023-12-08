@@ -155,8 +155,17 @@ const App = () => {
         {/* @ts-ignore */}
         <ViewShot ref={ref} options={{ fileName: "Your-File-Name", format: "jpg", quality: 1 }}>
           <ImageBackground resizeMode='cover' source={{ uri: bgUri }} style={{ alignSelf: 'center', justifyContent: 'center', alignItems: 'center', width: containerSize[0], height: containerSize[1] }}>
-            <View style={{ borderWidth, borderColor, justifyContent: 'center', alignItems: 'center', width: imageNowSize[0], height: imageNowSize[1], borderRadius: borderRadius, overflow: 'hidden' }}>
-              <Image onLoad={onLoadedImage} resizeMode='cover' source={{ uri: imgUri }} style={{ width: '100%', height: '100%' }} />
+            <View style={{
+              shadowColor: '#171717',
+              shadowOffset: {width: -5, height: 4},
+              shadowOpacity: 0.2,
+              shadowRadius: 3,
+            }}>
+              <View style={{
+                borderWidth, borderColor, justifyContent: 'center', alignItems: 'center', width: imageNowSize[0], height: imageNowSize[1], borderRadius: borderRadius, overflow: 'hidden'
+              }}>
+                <Image onLoad={onLoadedImage} resizeMode='cover' source={{ uri: imgUri }} style={{ width: '100%', height: '100%' }} />
+              </View>
             </View>
           </ImageBackground>
         </ViewShot>
@@ -231,7 +240,7 @@ const App = () => {
           <Slider
             style={{ flex: 1, }}
             minimumValue={0}
-            maximumValue={5}
+            maximumValue={10}
             tapToSeek={true}
             value={borderWidth}
             onValueChange={(value: number) => setBorderWidth(value)}
