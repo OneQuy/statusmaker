@@ -43,15 +43,6 @@ const paddings = [
   0.7,
 ]
 
-const borders = [
-  10,
-  15,
-  20,
-  25,
-  30,
-  35
-]
-
 const chooseBGSize = 70
 
 const App = () => {
@@ -131,22 +122,22 @@ const App = () => {
 
   const onPressOpenPhoto = async () => {
     try {
-    const img = await ImagePicker.openPicker({
-      // width: 100,
-      // height: 300,
-      freeStyleCropEnabled: true,
-      cropping: true
-    })
+      const img = await ImagePicker.openPicker({
+        // width: 100,
+        // height: 300,
+        freeStyleCropEnabled: true,
+        cropping: true
+      })
 
-    console.log(img.path);
+      console.log(img.path);
 
-    if (img && img.path)
-      setImageUri(img.path)
-  }
-  catch (e) {
-    console.log(e);
-    
-  }
+      if (img && img.path)
+        setImageUri(img.path)
+    }
+    catch (e) {
+      console.log(e);
+
+    }
   }
 
 
@@ -175,17 +166,20 @@ const App = () => {
 
         <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
 
-        <Text style={{ paddingHorizontal: 10, color: 'black', fontSize: 20 }}>Padding</Text>
+        <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
+          <Text style={{ color: 'black', fontSize: 20, }}>Padding</Text>
 
-        <ScrollView horizontal contentContainerStyle={{ height: 30, gap: 10, alignItems: 'center' }}>
-          {
-            paddings.map((padding, index) => {
-              return <TouchableOpacity style={{ borderRadius: 5, justifyContent: 'center', alignContent: 'center', padding: 5, backgroundColor: 'black' }} key={index} onPress={() => setPercentPadding(padding)}>
-                <Text style={{ color: 'white', fontSize: 20, }}>{padding}</Text>
-              </TouchableOpacity>
-            })
-          }
-        </ScrollView>
+          <Slider
+            style={{ flex: 1, }}
+            minimumValue={0.5}
+            maximumValue={0.95}
+            tapToSeek={true}
+            value={percentPadding}
+            onValueChange={(value: number) => setPercentPadding(value)}
+            minimumTrackTintColor='gray'
+            maximumTrackTintColor="#000000"
+          />
+        </View>
 
         <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
 
