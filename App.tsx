@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, ImageBackground, Image, NativeSyntheticEvent,
 import React, { LegacyRef, MutableRefObject, useRef, useState } from 'react'
 import ViewShot from "react-native-view-shot";
 // import { Asset, CameraOptions, launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { SaveToGalleryAsync } from './CameraRoll';
+import { SaveToGalleryAsync } from './src/common/CameraRoll';
 import Slider from '@react-native-community/slider';
 import ImagePicker from 'react-native-image-crop-picker';
 
