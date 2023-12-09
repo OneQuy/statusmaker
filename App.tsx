@@ -5,7 +5,7 @@ import ViewShot from "react-native-view-shot";
 import { SaveToGalleryAsync } from './src/common/CameraRoll';
 import Slider from '@react-native-community/slider';
 import ImagePicker from 'react-native-image-crop-picker';
-import { colorNameToHexDefines } from './src/common/UtilsTS';
+import { ColorNameToRgb, colorNameToHexDefines } from './src/common/UtilsTS';
 
 const bgSourcesDefault = [
   'https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?size=626&ext=jpg&ga=GA1.1.1222169770.1701734400&semt=sph',
@@ -42,7 +42,8 @@ const App = () => {
 
   const [imageRealSize, setImageRealSize] = useState<[number, number]>([10, 10])
   const [imgUri, setImageUri] = useState(bgSourcesDefault[1])
-  const [bgUri, setBgUri] = useState(bgSourcesDefault[0])
+  const [bgUri, setBgUri] = useState<string | undefined>(undefined)
+  const [bgSolidColor, setBgSolidColor] = useState('white')
   const [percentPadding, setPercentPadding] = useState(0.9)
   const [ratio, setRatio] = useState(3 / 2)
   const [borderRadius, setBorderRadius] = useState(10)
@@ -94,6 +95,15 @@ const App = () => {
 
       setRatio(Math.min(1.33, maxRatio))
     })
+  }
+
+  const onSetBgUri = (uri: string) => {
+    setBgUri(uri)
+  }
+
+  const onSetBgSolidColor = (color: string) => {
+    setBgUri(undefined)
+    setBgSolidColor(color)
   }
 
   const onValueChange_Ratio = (value: number) => {
@@ -165,18 +175,13 @@ const App = () => {
     downloadListBGAsync()
   }, [])
 
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ gap: 10, backgroundColor: 'white', }}>
         {/* @ts-ignore */}
         <ViewShot ref={ref} options={{ fileName: "Your-File-Name", format: "jpg", quality: 1 }}>
-          <ImageBackground resizeMode='cover' source={{ uri: bgUri }} style={{ alignSelf: 'center', justifyContent: 'center', alignItems: 'center', width: containerSize[0], height: containerSize[1] }}>
-            <View style={{
-              shadowColor,
-              shadowOffset: { width: shadowWidth, height: shadowHeight },
-              shadowOpacity: shadowOpacity,
-            }}>
+          <ImageBackground resizeMode='cover' source={{ uri: bgUri }} style={{ backgroundColor: bgSolidColor, alignSelf: 'center', justifyContent: 'center', alignItems: 'center', width: containerSize[0], height: containerSize[1] }}>
+            <View style={{ backgroundColor: ColorNameToRgb('white', 1), borderRadius, shadowColor, shadowOffset: { width: shadowWidth, height: shadowHeight }, shadowOpacity: shadowOpacity, }}>
               <View style={{
                 borderWidth, borderColor, justifyContent: 'center', alignItems: 'center', width: imageNowSize[0], height: imageNowSize[1], borderRadius: borderRadius, overflow: 'hidden'
               }}>
@@ -189,7 +194,7 @@ const App = () => {
           <ScrollView horizontal contentContainerStyle={{}}>
             {
               listBGArr.map((uri, index) => {
-                return <TouchableOpacity style={{ width: chooseBGSize, height: chooseBGSize }} key={index} onPress={() => setBgUri(uri)}>
+                return <TouchableOpacity style={{ width: chooseBGSize, height: chooseBGSize }} key={index} onPress={() => onSetBgUri(uri)}>
                   <Image source={{ uri }} style={{ width: '100%', height: '100%' }} />
                 </TouchableOpacity>
               })
@@ -197,57 +202,62 @@ const App = () => {
           </ScrollView>
         </View>
 
-        <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
-
-        <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 20, }}>Scale</Text>
-
-          <Slider
-            style={{ flex: 1, }}
-            minimumValue={0.5}
-            maximumValue={0.95}
-            tapToSeek={true}
-            value={percentPadding}
-            onValueChange={(value: number) => setPercentPadding(value)}
-            minimumTrackTintColor='gray'
-            maximumTrackTintColor="#000000"
-          />
-        </View>
+        <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: 10 }}>
+          {
+            colors.map((color, index) => {
+              return <TouchableOpacity
+                onPress={() => onSetBgSolidColor(color)}
+                key={color + index}
+                style={{ width: 20, height: 20, backgroundColor: color }} />
+            })
+          }
+        </ScrollView>
 
         <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
 
         <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 20, }}>Ratio</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: 'black', fontSize: 20, }}>Scale</Text>
+            <Slider
+              style={{ flex: 1, }}
+              minimumValue={0.5}
+              maximumValue={0.95}
+              tapToSeek={true}
+              value={percentPadding}
+              onValueChange={(value: number) => setPercentPadding(value)}
+              minimumTrackTintColor='gray'
+              maximumTrackTintColor="#000000"
+            />
+          </View>
 
-          <Slider
-            style={{ flex: 1, }}
-            minimumValue={1}
-            maximumValue={maxRatio}
-            tapToSeek={true}
-            value={ratio}
-            onValueChange={onValueChange_Ratio}
-            minimumTrackTintColor='gray'
-            maximumTrackTintColor="#000000"
-          />
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: 'black', fontSize: 20, }}>Ratio</Text>
+            <Slider
+              style={{ flex: 1, }}
+              minimumValue={1}
+              maximumValue={maxRatio}
+              tapToSeek={true}
+              value={ratio}
+              onValueChange={onValueChange_Ratio}
+              minimumTrackTintColor='gray'
+              maximumTrackTintColor="#000000"
+            />
+          </View>
+
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: 'black', fontSize: 20, }}>Corner</Text>
+            <Slider
+              style={{ flex: 1, }}
+              minimumValue={0}
+              maximumValue={50}
+              tapToSeek={true}
+              value={borderRadius}
+              onValueChange={(value: number) => setBorderRadius(value)}
+              minimumTrackTintColor='gray'
+              maximumTrackTintColor="#000000"
+            />
+          </View>
         </View>
-
-        <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
-
-        <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 20, }}>Corner</Text>
-
-          <Slider
-            style={{ flex: 1, }}
-            minimumValue={0}
-            maximumValue={50}
-            tapToSeek={true}
-            value={borderRadius}
-            onValueChange={(value: number) => setBorderRadius(value)}
-            minimumTrackTintColor='gray'
-            maximumTrackTintColor="#000000"
-          />
-        </View>
-
         <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
 
         <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
