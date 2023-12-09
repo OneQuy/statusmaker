@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ImageBackground, Image, NativeSyntheticEvent, ImageLoadEventData, Dimensions, TouchableOpacity, Alert, ScrollView, FlatList, StyleSheet } from 'react-native'
+import { View, Text, SafeAreaView, ImageBackground, Image, NativeSyntheticEvent, ImageLoadEventData, Dimensions, TouchableOpacity, Alert, ScrollView, FlatList, StyleSheet, Platform } from 'react-native'
 import React, { LegacyRef, MutableRefObject, useEffect, useRef, useState } from 'react'
 import ViewShot from "react-native-view-shot";
 // import { Asset, CameraOptions, launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -55,6 +55,7 @@ const App = () => {
   const [shadowWidth, setShadowWidth] = useState(5)
   const [shadowHeight, setShadowHeight] = useState(5)
   const [shadowColor, setShadowColor] = useState('black')
+  const [elevation, setElevation] = useState(0)
 
   const isLandscape = imageRealSize[0] >= imageRealSize[1]
   const maxRatio = Math.max(imageRealSize[0], imageRealSize[1]) / Math.min(imageRealSize[0], imageRealSize[1])
@@ -182,7 +183,7 @@ const App = () => {
         {/* @ts-ignore */}
         <ViewShot ref={ref} options={{ fileName: "Your-File-Name", format: "jpg", quality: 1 }}>
           <ImageBackground resizeMode='cover' source={{ uri: bgUri }} style={{ backgroundColor: bgSolidColor, alignSelf: 'center', justifyContent: 'center', alignItems: 'center', width: containerSize[0], height: containerSize[1] }}>
-            <View style={{ backgroundColor: ColorNameToRgb('white', 1), borderRadius, shadowColor, shadowOffset: { width: shadowWidth, height: shadowHeight }, shadowOpacity: shadowOpacity, }}>
+            <View style={{ backgroundColor: 'white', elevation, borderRadius, shadowColor, shadowOffset: { width: shadowWidth, height: shadowHeight }, shadowOpacity: shadowOpacity, }}>
               <View style={{
                 borderWidth, borderColor, justifyContent: 'center', alignItems: 'center', width: imageNowSize[0], height: imageNowSize[1], borderRadius: borderRadius, overflow: 'hidden'
               }}>
@@ -259,7 +260,7 @@ const App = () => {
             />
           </View>
         </View>
-        
+
         <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
 
         <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
@@ -290,58 +291,77 @@ const App = () => {
 
         <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
 
-        <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
-          <View style={{ flex: 1 }}>
-            <Text style={{ color: 'black', fontSize: 15, }}>Shadow</Text>
-            <Slider
-              style={{ flex: 1, }}
-              minimumValue={0.0}
-              maximumValue={1.0}
-              tapToSeek={true}
-              value={shadowOpacity}
-              onValueChange={(value: number) => onValueChange_ShadowOpacity(value)}
-              minimumTrackTintColor='gray'
-              maximumTrackTintColor="#000000"
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={{ color: 'black', fontSize: 15, }}>Offset X</Text>
-            <Slider
-              style={{ flex: 1, }}
-              minimumValue={-20}
-              maximumValue={20}
-              tapToSeek={true}
-              value={shadowWidth}
-              onValueChange={(value: number) => onValueChange_ShadowWidth(value)}
-              minimumTrackTintColor='gray'
-              maximumTrackTintColor="#000000"
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={{ color: 'black', fontSize: 15, }}>Offset Y</Text>
-            <Slider
-              style={{ flex: 1, }}
-              minimumValue={-20}
-              maximumValue={20}
-              tapToSeek={true}
-              value={shadowHeight}
-              onValueChange={(value: number) => onValueChange_ShadowHeight(value)}
-              minimumTrackTintColor='gray'
-              maximumTrackTintColor="#000000"
-            />
-          </View>
-        </View>
+        {
+          Platform.OS === 'android' ?
+            <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
+              <Text style={{ color: 'black', fontSize: 15, }}>Shadow</Text>
+              <Slider
+                style={{ flex: 1, }}
+                minimumValue={0}
+                maximumValue={20}
+                tapToSeek={true}
+                value={elevation}
+                onValueChange={(value: number) => setElevation(value)}
+                minimumTrackTintColor='gray'
+                maximumTrackTintColor="#000000"
+              />
+            </View> :
+            <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: 'black', fontSize: 15, }}>Shadow</Text>
+                <Slider
+                  style={{ flex: 1, }}
+                  minimumValue={0.0}
+                  maximumValue={1.0}
+                  tapToSeek={true}
+                  value={shadowOpacity}
+                  onValueChange={(value: number) => onValueChange_ShadowOpacity(value)}
+                  minimumTrackTintColor='gray'
+                  maximumTrackTintColor="#000000"
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: 'black', fontSize: 15, }}>Offset X</Text>
+                <Slider
+                  style={{ flex: 1, }}
+                  minimumValue={-20}
+                  maximumValue={20}
+                  tapToSeek={true}
+                  value={shadowWidth}
+                  onValueChange={(value: number) => onValueChange_ShadowWidth(value)}
+                  minimumTrackTintColor='gray'
+                  maximumTrackTintColor="#000000"
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: 'black', fontSize: 15, }}>Offset Y</Text>
+                <Slider
+                  style={{ flex: 1, }}
+                  minimumValue={-20}
+                  maximumValue={20}
+                  tapToSeek={true}
+                  value={shadowHeight}
+                  onValueChange={(value: number) => onValueChange_ShadowHeight(value)}
+                  minimumTrackTintColor='gray'
+                  maximumTrackTintColor="#000000"
+                />
+              </View>
+            </View>
+        }
 
-        <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: colorsGap }}>
-          {
-            colors.map((color, index) => {
-              return <TouchableOpacity
-                onPress={() => setShadowColor(color)}
-                key={color + index}
-                style={{ width: 20, height: 20, backgroundColor: color }} />
-            })
-          }
-        </ScrollView>
+        {
+          Platform.OS === 'android' ? undefined :
+          <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: colorsGap }}>
+            {
+              colors.map((color, index) => {
+                return <TouchableOpacity
+                  onPress={() => setShadowColor(color)}
+                  key={color + index}
+                  style={{ width: 20, height: 20, backgroundColor: color }} />
+              })
+            }
+          </ScrollView>
+        }
 
       </ScrollView>
       <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'center', paddingVertical: 10 }}>
