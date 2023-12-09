@@ -31,6 +31,7 @@ const bgSourcesDefault = [
 ]
 
 const listBGFirebaseLink = 'https://firebasestorage.googleapis.com/v0/b/onequy-borderme.appspot.com/o/listBG.txt?alt=media&token=c8611c3d-1a59-4835-a621-612726bfb336'
+const listBGFirebaseLink_Nature = 'https://firebasestorage.googleapis.com/v0/b/onequy-borderme.appspot.com/o/listBGNature.txt?alt=media&token=3d450636-b499-4324-96e9-36fd7e6192e9'
 
 const window = Dimensions.get('screen')
 
@@ -52,6 +53,7 @@ const App = () => {
   const [borderWidth, setBorderWidth] = useState(0)
   const [borderColor, setBorderColor] = useState('black')
   const [listBGArr, setListBGArr] = useState<string[]>(bgSourcesDefault)
+  const [listBGArr_Nature, setListBGArr_Nature] = useState<string[]>([])
   const [shadowOpacity, setShadowOpacity] = useState(0.3)
   const [shadowWidth, setShadowWidth] = useState(5)
   const [shadowHeight, setShadowHeight] = useState(5)
@@ -207,7 +209,24 @@ const App = () => {
       }
     }
 
+    const downloadListBGAsync_Nature = async () => {
+      try {
+        const res = await fetch(listBGFirebaseLink_Nature)
+        const text = await res.text()
+        let arr = text.split('\n')
+
+        arr = arr.filter(i => i.startsWith('https://'))
+
+        if (arr.length > 0)
+          setListBGArr_Nature(arr)
+      }
+      catch (e) {
+        console.error(e);
+      }
+    }
+
     downloadListBGAsync()
+    downloadListBGAsync_Nature()
   }, [])
 
   return (
@@ -229,6 +248,18 @@ const App = () => {
           <ScrollView horizontal contentContainerStyle={{ gap: colorsGap }}>
             {
               listBGArr.map((uri, index) => {
+                return <TouchableOpacity style={{ width: chooseBGSize, height: chooseBGSize }} key={index} onPress={() => onSetBgUri(uri)}>
+                  <Image source={{ uri }} style={{ width: '100%', height: '100%' }} />
+                </TouchableOpacity>
+              })
+            }
+          </ScrollView>
+        </View>
+        
+        <View style={{ height: chooseBGSize, width: '100%' }}>
+          <ScrollView horizontal contentContainerStyle={{ gap: colorsGap }}>
+            {
+              listBGArr_Nature.map((uri, index) => {
                 return <TouchableOpacity style={{ width: chooseBGSize, height: chooseBGSize }} key={index} onPress={() => onSetBgUri(uri)}>
                   <Image source={{ uri }} style={{ width: '100%', height: '100%' }} />
                 </TouchableOpacity>
