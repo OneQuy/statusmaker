@@ -218,7 +218,7 @@ const App = () => {
 
         <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: 'black', fontSize: 20, }}>Scale</Text>
+            <Text style={{ color: 'black', fontSize: 15, }}>Scale</Text>
             <Slider
               style={{ flex: 1, }}
               minimumValue={0.5}
@@ -232,7 +232,7 @@ const App = () => {
           </View>
 
           <View style={{ flex: 1 }}>
-            <Text style={{ color: 'black', fontSize: 20, }}>Ratio</Text>
+            <Text style={{ color: 'black', fontSize: 15, }}>Ratio</Text>
             <Slider
               style={{ flex: 1, }}
               minimumValue={1}
@@ -246,7 +246,7 @@ const App = () => {
           </View>
 
           <View style={{ flex: 1 }}>
-            <Text style={{ color: 'black', fontSize: 20, }}>Corner</Text>
+            <Text style={{ color: 'black', fontSize: 15, }}>Corner</Text>
             <Slider
               style={{ flex: 1, }}
               minimumValue={0}
@@ -263,7 +263,7 @@ const App = () => {
         <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
 
         <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 20, }}>Border</Text>
+          <Text style={{ color: 'black', fontSize: 15, }}>Border</Text>
 
           <Slider
             style={{ flex: 1, }}
