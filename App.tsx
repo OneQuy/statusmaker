@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ImageBackground, Image, NativeSyntheticEvent, ImageLoadEventData, Dimensions, TouchableOpacity, Alert, ScrollView, FlatList, StyleSheet, Platform } from 'react-native'
+import { View, Text, SafeAreaView, ImageBackground, Image, NativeSyntheticEvent, ImageLoadEventData, Dimensions, TouchableOpacity, Alert, ScrollView, StyleSheet, Platform } from 'react-native'
 import React, { LegacyRef, useEffect, useRef, useState } from 'react'
 import ViewShot from "react-native-view-shot";
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -6,6 +6,7 @@ import { SaveToGalleryAsync } from './src/common/CameraRoll';
 import Slider from '@react-native-community/slider';
 import ImagePicker from 'react-native-image-crop-picker';
 import { colorNameToHexDefines } from './src/common/UtilsTS';
+import Share from 'react-native-share';
 
 const bgSourcesDefault = [
   'https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?size=626&ext=jpg&ga=GA1.1.1222169770.1701734400&semt=sph',
@@ -127,17 +128,27 @@ const App = () => {
   const onPressSave = () => {
     // @ts-ignore
     ref.current.capture().then(async (uri: string) => {
-      console.log("do somesthing with ", uri);
-
       const res = await SaveToGalleryAsync(uri)
 
-      console.log(res);
-
-      if (res === null)
-        Alert.alert('Success')
-      else
+      if (res !== null)
         Alert.alert('Fail', '' + res)
     });
+  }
+
+  const onPressShare = () => {
+    // @ts-ignore
+    ref.current.capture().then(async (uri: string) => {
+      Share
+        .open({
+          url: uri,
+        })
+        .then((res) => {
+          
+        })
+        .catch((err) => {
+          Alert.alert('Fail', '' + err)
+        });
+    })
   }
 
   const onPressOpenPhoto = async () => {
@@ -389,6 +400,9 @@ const App = () => {
       <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'center', paddingVertical: 10 }}>
         <TouchableOpacity style={{ borderRadius: 5, padding: 10, backgroundColor: 'black' }} onPress={onPressSave}>
           <Text style={{ color: 'white' }}>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ borderRadius: 5, padding: 10, backgroundColor: 'black' }} onPress={onPressShare}>
+          <Text style={{ color: 'white' }}>Share</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ borderRadius: 5, padding: 10, backgroundColor: 'black' }} onPress={onPressOpenPhoto}>
           <Text style={{ color: 'white' }}>Open Photo</Text>
