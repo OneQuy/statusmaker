@@ -33,7 +33,8 @@ const listBGFirebaseLink = 'https://firebasestorage.googleapis.com/v0/b/onequy-b
 
 const window = Dimensions.get('screen')
 
-const chooseBGSize = 70
+const chooseBGSize = 30
+const colorsGap = 3
 
 const colors = Object.values(colorNameToHexDefines)
 
@@ -191,7 +192,7 @@ const App = () => {
           </ImageBackground>
         </ViewShot>
         <View style={{ height: chooseBGSize, width: '100%' }}>
-          <ScrollView horizontal contentContainerStyle={{}}>
+          <ScrollView horizontal contentContainerStyle={{ gap: colorsGap }}>
             {
               listBGArr.map((uri, index) => {
                 return <TouchableOpacity style={{ width: chooseBGSize, height: chooseBGSize }} key={index} onPress={() => onSetBgUri(uri)}>
@@ -202,7 +203,7 @@ const App = () => {
           </ScrollView>
         </View>
 
-        <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: 10 }}>
+        <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: colorsGap }}>
           {
             colors.map((color, index) => {
               return <TouchableOpacity
@@ -276,7 +277,7 @@ const App = () => {
           />
         </View>
 
-        <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: 10 }}>
+        <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: colorsGap }}>
           {
             colors.map((color, index) => {
               return <TouchableOpacity
@@ -331,7 +332,7 @@ const App = () => {
           </View>
         </View>
 
-        <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: 10 }}>
+        <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: colorsGap }}>
           {
             colors.map((color, index) => {
               return <TouchableOpacity
