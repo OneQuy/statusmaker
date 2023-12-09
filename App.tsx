@@ -166,8 +166,12 @@ const App = () => {
       try {
         const res = await fetch(listBGFirebaseLink)
         const text = await res.text()
+        let arr = text.split('\n')
 
-        setListBGArr(text.split('\n'))
+        arr = arr.filter(i => i.startsWith('https://'))
+
+        if (arr.length > 0)
+          setListBGArr(arr)
       }
       catch (e) {
         console.error(e);
@@ -351,16 +355,16 @@ const App = () => {
 
         {
           Platform.OS === 'android' ? undefined :
-          <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: colorsGap }}>
-            {
-              colors.map((color, index) => {
-                return <TouchableOpacity
-                  onPress={() => setShadowColor(color)}
-                  key={color + index}
-                  style={{ width: 20, height: 20, backgroundColor: color }} />
-              })
-            }
-          </ScrollView>
+            <ScrollView horizontal contentContainerStyle={{ paddingLeft: 10, gap: colorsGap }}>
+              {
+                colors.map((color, index) => {
+                  return <TouchableOpacity
+                    onPress={() => setShadowColor(color)}
+                    key={color + index}
+                    style={{ width: 20, height: 20, backgroundColor: color }} />
+                })
+              }
+            </ScrollView>
         }
 
       </ScrollView>
