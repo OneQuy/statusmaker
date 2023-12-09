@@ -258,6 +258,7 @@ const App = () => {
             />
           </View>
         </View>
+        
         <View style={{ width: '100%', height: StyleSheet.hairlineWidth, backgroundColor: 'black' }} />
 
         <View style={{ gap: 10, paddingHorizontal: 10, flexDirection: 'row', alignContent: 'center' }}>
@@ -303,7 +304,7 @@ const App = () => {
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: 'black', fontSize: 15, }}>Width</Text>
+            <Text style={{ color: 'black', fontSize: 15, }}>Offset X</Text>
             <Slider
               style={{ flex: 1, }}
               minimumValue={-20}
@@ -316,7 +317,7 @@ const App = () => {
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: 'black', fontSize: 15, }}>Height</Text>
+            <Text style={{ color: 'black', fontSize: 15, }}>Offset Y</Text>
             <Slider
               style={{ flex: 1, }}
               minimumValue={-20}
