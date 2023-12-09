@@ -1,11 +1,11 @@
 import { View, Text, SafeAreaView, ImageBackground, Image, NativeSyntheticEvent, ImageLoadEventData, Dimensions, TouchableOpacity, Alert, ScrollView, FlatList, StyleSheet, Platform } from 'react-native'
-import React, { LegacyRef, MutableRefObject, useEffect, useRef, useState } from 'react'
+import React, { LegacyRef, useEffect, useRef, useState } from 'react'
 import ViewShot from "react-native-view-shot";
-// import { Asset, CameraOptions, launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { SaveToGalleryAsync } from './src/common/CameraRoll';
 import Slider from '@react-native-community/slider';
 import ImagePicker from 'react-native-image-crop-picker';
-import { ColorNameToRgb, colorNameToHexDefines } from './src/common/UtilsTS';
+import { colorNameToHexDefines } from './src/common/UtilsTS';
 
 const bgSourcesDefault = [
   'https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?size=626&ext=jpg&ga=GA1.1.1222169770.1701734400&semt=sph',
@@ -142,22 +142,40 @@ const App = () => {
 
   const onPressOpenPhoto = async () => {
     try {
-      const img = await ImagePicker.openPicker({
-        // width: 100,
-        // height: 300,
-        freeStyleCropEnabled: true,
-        cropping: true,
-        compressImageQuality: 1,
-      })
+      let path = ''
 
-      console.log(img.path);
+      if (Platform.OS === 'android') {
+        const img = await ImagePicker.openPicker({
+          freeStyleCropEnabled: true,
+          cropping: true,
+          compressImageQuality: 1,
+        })
 
-      if (img && img.path)
-        setImageUri(img.path)
+        if (img && img.path)
+          path = img.path
+      }
+      else {
+        const response = await launchImageLibrary({
+          mediaType: 'photo',
+          selectionLimit: 1,
+        })
+
+        if (response.didCancel)
+          return
+        else if (!response.assets || response.assets.length <= 0) {
+          return
+        }
+        else { // pick success
+          if (response.assets[0].uri)
+            path = response.assets[0].uri
+        }
+      }
+
+      if (path)
+        setImageUri(path)
     }
     catch (e) {
       console.log(e);
-
     }
   }
 
